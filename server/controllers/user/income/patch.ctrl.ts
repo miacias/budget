@@ -6,7 +6,7 @@ import { logger } from "../../../utils/chalk";
 export const patchIncomeSource = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
   logger.debug('Updating income source...');
   const { userId, incomeId } = req?.params;
-  const { name, monthlyGrossPay, monthlyTaxes, hourlyWage, salary } = req.body;
+  const { name, monthlyGrossPay, monthlyTaxes, hourlyWage, salary, archived } = req.body;
   const endpoint = {
     route: `/api/users/${userId}/incomeSources/${incomeId}`,
     method: 'PATCH',
@@ -49,13 +49,14 @@ export const patchIncomeSource = async (req: Request, res: Response): Promise<Re
       });
     }
 
-    // Builds update object with only provided fields for patch
+    // builds update object with only provided fields for patch
     const updateData: Partial<{
       name: string;
       monthlyGrossPay: number;
       monthlyTaxes: number;
       hourlyWage?: number;
       salary?: number;
+      archived: boolean;
     }> = {};
 
     if (name !== undefined) updateData.name = name;
@@ -63,8 +64,9 @@ export const patchIncomeSource = async (req: Request, res: Response): Promise<Re
     if (monthlyTaxes !== undefined) updateData.monthlyTaxes = monthlyTaxes;
     if (hourlyWage !== undefined) updateData.hourlyWage = hourlyWage;
     if (salary !== undefined) updateData.salary = salary;
+    if (archived !== undefined) updateData.archived = archived;
 
-    // Check if at least one field is being updated
+    // checks if at least one field is being updated
     if (Object.keys(updateData).length === 0) {
       logger.info('Bad Request: No fields to update');
       logger.server.request(endpoint.method, endpoint.route, 400);
