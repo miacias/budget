@@ -4,6 +4,7 @@ import { logger } from '../../utils/chalk';
 
 export const getOneById = async (req: Request, res: Response) => {
   const userId = req?.params?.userId;
+  const includeArchived = req?.query?.includeArchived === 'true';
   const endpoint = {
     route: `/api/users/${userId}`,
     method: 'GET',
@@ -18,7 +19,15 @@ export const getOneById = async (req: Request, res: Response) => {
   }
 
   try {
-    const user = await User.findById(userId).select('-password').populate('incomeSources').lean();
+    const populateOptions = {
+      path: 'incomeSources',
+      match: includeArchived ? {} : { archived: { $ne: true } } // filter out archived unless includeArchived is true
+    };
+    const user = await User
+      .findById(userId)
+      .select('-password')
+      .populate(populateOptions)
+      .lean();
     if (!user) {
       logger.info('User not found');
       logger.server.request(endpoint.method, endpoint.route, 404);

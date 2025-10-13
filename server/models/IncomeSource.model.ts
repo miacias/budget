@@ -6,6 +6,7 @@ const incomeSourceSchema = new Schema({
   monthlyTaxes: { type: Number, required: true },
   hourlyWage: { type: Number, required: false },
   salary: { type: Number, required: false },
+  archived: { type: Boolean, default: false },
   userId: { type: Types.ObjectId, ref: 'User', required: true },
 }, {
   toJSON: { virtuals: true },
