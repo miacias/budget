@@ -1,9 +1,11 @@
-import { Components } from '../../components';
+import { Section, UI } from '../../components';
 
 export const Login = () => {
+
   return (
-    <Components.section.Layout title="Login">
+    <Section.Layout title="Login">
       <p>Please enter your credentials to log in.</p>
-    </Components.section.Layout>
+      <UI.CreateAccountForm />
+    </Section.Layout>
   );
 }

@@ -5,7 +5,7 @@ import { incomeRouter } from './income';
 
 const router: Router = Router({ mergeParams: true });
 
-router.post('/', authMiddleware, api.user.create);
+router.post('/', api.user.create);
 router.get('/', authMiddleware, api.user.getAll);
 router.get('/:userId', authMiddleware, api.user.getOneById);
 router.delete('/:userId', authMiddleware, api.user.deleteUser);
