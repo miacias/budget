@@ -60,6 +60,13 @@ userSchema.methods.validatePassword = async function(password: string): Promise<
   return bcrypt.compare(password, this.password);
 }
 
+userSchema.virtual('incomeSourcesCount', {
+  ref: 'IncomeSource',
+  localField: '_id',
+  foreignField: 'userId',
+  count: true
+});
+
 // compiled model
 const User = model<UserDocument>('User', userSchema);
 

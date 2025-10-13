@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { api } from '../../../../controllers';
+import { authMiddleware } from '../../../../utils/auth';
 
-const router: Router = Router();
+const router: Router = Router({ mergeParams: true });
 
-router.post('/', api.user.income.createIncomeSource);
+router.post('/', authMiddleware, api.user.income.createIncomeSource);
+router.patch('/:incomeId', authMiddleware, api.user.income.patchIncomeSource);
 
 export { router as incomeRouter };

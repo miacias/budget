@@ -27,7 +27,7 @@ if (!secret) {
 export const signToken = (payload: object): string => {
   console.log('🔐 Signing token with payload:', payload);
   const token = jwt.sign(payload, secret, { expiresIn: expiration } as SignOptions);
-  logger.success('✅ Token generated successfully');
+  logger.success('Token generated successfully');
   return token;
 }
 
@@ -35,7 +35,7 @@ export const verifyToken = (token: string): string | JwtPayload => {
   logger.info('🔍 Verifying token...');
   try {
     const decoded = jwt.verify(token, secret) as CustomJwtPayload;
-    logger.success('✅ Token is valid');
+    logger.success('Token is valid');
     return decoded;
   } catch (err) {
     logger.error(`Invalid or expired token. Error: ${(err as Error).message}`);

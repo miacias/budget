@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Request, Response } from "express";
-import { IncomeSource } from "../../../models";
+import { IncomeSource, User } from "../../../models";
 import { logger } from "../../../utils/chalk";
 
 export const createIncomeSource = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
@@ -8,7 +8,7 @@ export const createIncomeSource = async (req: Request, res: Response): Promise<R
   const { userId } = req?.params;
   const { name, monthlyGrossPay, monthlyTaxes, hourlyWage, salary } = req.body;
   const endpoint = {
-    route: `/api/user/${userId}/income`,
+    route: `/api/users/${userId}/incomeSources`,
     method: 'POST',
   };
 
@@ -74,6 +74,16 @@ export const createIncomeSource = async (req: Request, res: Response): Promise<R
       return res.status(500).json({
         success: false,
         message: 'Failed to create income source',
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { $push: { incomeSources: incomeSource._id } });
+    if (!updatedUser) {
+      logger.info('Failed to associate income source with user');
+      logger.server.request(endpoint.method, endpoint.route, 500);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to associate income source with user',
       });
     }
 

@@ -5,10 +5,15 @@ import { Request, Response } from 'express';
 
 export const logoutUser = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
   logger.debug('Logging out user...');
+  const endpoint = {
+    route: '/api/auth/logout',
+    method: 'POST',
+  }
   try {
     const user = req.user as any;
     if (!user) {
       logger.info('No user in request');
+      logger.server.request(endpoint.method, endpoint.route, 401);
       return res.status(401).json({ 
         success: false,
         message: 'No token provided',
@@ -19,6 +24,7 @@ export const logoutUser = async (req: Request, res: Response): Promise<Response<
     
     if (!token) {
       logger.info('No token provided');
+      logger.server.request(endpoint.method, endpoint.route, 401);
       return res.status(401).json({
         success: false,
         message: 'No token provided',
@@ -29,13 +35,14 @@ export const logoutUser = async (req: Request, res: Response): Promise<Response<
     const loggedOutUser = await User.findByIdAndUpdate(userId, { token: null });
     if (!loggedOutUser) {
       logger.info(`User not found: ${userId}`);
+      logger.server.request(endpoint.method, endpoint.route, 404);
       return res.status(404).json({
         success: false,
         message: 'User not found',
       });
     }
 
-    logger.server.request('POST', '/api/auth/logout', 200);
+    logger.server.request(endpoint.method, endpoint.route, 200);
     return res.status(200).json({
       success: true,
       message: 'User logged out successfully',
@@ -45,6 +52,7 @@ export const logoutUser = async (req: Request, res: Response): Promise<Response<
     });
   } catch (err: any) {
     logger.error(`Logout Error: ${err.message}`);
+    logger.server.request(endpoint.method, endpoint.route, 500);
     return res.status(500).json({ 
       success: false,
       message: `Server Error: ${err.message}`,

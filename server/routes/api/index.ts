@@ -5,6 +5,6 @@ import { userRouter } from './user/index.js';
 const router: Router = Router();
 
 router.use('/auth', authRouter);
-router.use('/user', userRouter);
+router.use('/users', userRouter);
 
 export { router as apiRouter };

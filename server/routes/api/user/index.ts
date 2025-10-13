@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import { api } from '../../../controllers';
+import { authMiddleware } from '../../../utils/auth';
 import { incomeRouter } from './income';
 
-const router: Router = Router();
+const router: Router = Router({ mergeParams: true });
 
-router.post('/', api.user.create);
-router.get('/', api.user.getAll);
-router.get('/:id', api.user.getOneById);
-router.delete('/:id', api.user.deleteUser);
+router.post('/', authMiddleware, api.user.create);
+router.get('/', authMiddleware, api.user.getAll);
+router.get('/:userId', authMiddleware, api.user.getOneById);
+router.delete('/:userId', authMiddleware, api.user.deleteUser);
 
-router.use('/:id/income', incomeRouter);
+router.use('/:userId/incomeSources', authMiddleware, incomeRouter);
 
 export { router as userRouter };
