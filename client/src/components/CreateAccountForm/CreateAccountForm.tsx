@@ -40,7 +40,7 @@ export const CreateAccountForm = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCreateAccount = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate form data
@@ -71,7 +71,7 @@ export const CreateAccountForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleCreateAccount}>
       <h2>Create Account</h2>
 {/* 
       {error && (
