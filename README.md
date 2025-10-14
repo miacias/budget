@@ -4,11 +4,11 @@
 
 TBD
 
-## Features with Screenshots
-
 ## Contributors
 
 - [Mia Ciasullo](https://github.com/miacias) - [LinkedIn](https://www.linkedin.com/in/miaciasullo)
+
+## Features with Screenshots
 
 ## Technologies and Tools
 

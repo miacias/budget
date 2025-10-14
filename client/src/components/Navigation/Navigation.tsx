@@ -1,7 +1,6 @@
-import { SegmentGroup } from '@ark-ui/react/segment-group';
+import { SegmentGroup } from "@chakra-ui/react";
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { navigation } from '../../../styled-system/recipes';
 
 export const Navigation = () => {
   const location = useLocation();
@@ -25,7 +24,7 @@ export const Navigation = () => {
   }
 
   return (
-    <nav className={navigation()}>
+    <nav>
       <SegmentGroup.Root value={value} onValueChange={(e) => handleValueChange(e.value)}>
         <SegmentGroup.Indicator />
         {navigationMenu.map((item) => (
