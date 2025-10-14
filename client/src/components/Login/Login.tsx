@@ -10,13 +10,16 @@ interface LoginData {
 }
 
 interface LoginResponse {
-  token: string;
-  user: {
+  success: boolean;
+  message: string;
+  data?: {
     id: string;
     email: string;
     firstName: string;
     lastName: string;
+    token: string;
   };
+  error?: string;
 }
 
 export const Login = () => {
@@ -43,19 +46,20 @@ export const Login = () => {
     if (!formData.email || !formData.password) {
       return alert("Please fill in all fields");
     }
+
     const response = await fetchUtil<LoginResponse>({
       url: "/api/auth/login",
       method: httpMethods.POST,
       body: formData,
       options: { retries: 3, retryDelay: 1000, requireAuth: false },
     });
-    if (response.data) {
+
+    if (response.success && response.data?.token) {
       localStorage.setItem("authToken", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("user", JSON.stringify(response.data));
       window.location.href = "/";
-    } else if (response.error) {
+    } else {
       console.error("Login failed:", response.error);
-      // alert("Login failed. Please try again.");
     }
   };
 

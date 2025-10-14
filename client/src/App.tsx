@@ -1,31 +1,28 @@
+// third party
 import { Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";  
-import { Page, Section } from "./components";
+// redux
+import { useAppSelector } from "./redux/hooks";
+import { useValidateTokenQuery } from "./features/auth/authApi.slice";
+// components
+import { Page } from "./components";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+// styles
 import "./App.css";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  
-  useEffect(() => {
-    // Check if user is logged in (e.g., check JWT token)
-    const token = localStorage.getItem('authToken')
-    setIsAuthenticated(!!token)
-    setIsLoading(false)
-  }, [])
-  
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
+  const { isAuthenticated, isLoading } = useAppSelector(state => state.auth);
 
-  if (isLoading) {
+  // Validate token on app start if user appears to be logged in
+  const { isLoading: isValidating } = useValidateTokenQuery(undefined, {
+    skip: !isAuthenticated // Only validate if we think user is authenticated
+  });
+
+  if (isLoading || isValidating) {
     return <div>Loading...</div>;
   }
 
   return (
     <>
-      <Section.Navigation />
       <Routes>
         {/* public routes */}
         <Route path="/login" element={<Page.Login />} />
