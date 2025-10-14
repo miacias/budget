@@ -1,3 +1,4 @@
+import { Heading } from "@chakra-ui/react";
 import { type PropsWithChildren } from "react";
 
 interface LayoutProps {
@@ -13,7 +14,7 @@ export const Layout = ({
 }: PropsWithChildren<LayoutProps>) => {
   return (
     <div className={className}>
-      {title && <h1>{title}</h1>}
+      {title && <Heading size={'4xl'}>{title}</Heading>}
       {children}
     </div>
   );
