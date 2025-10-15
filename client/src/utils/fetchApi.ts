@@ -13,8 +13,10 @@ interface FetchUtilParams {
 }
 
 interface FetchUtilResponse<T = unknown> {
-  data: T | null;
-  error: string | null;
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
   status?: number;
 }
 
@@ -54,24 +56,26 @@ export const fetchUtil = async <T = unknown>({
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    console.log(response)
+    const data = await response.json();
 
     if (!response.ok) {
-      let errorMessage = 'An error occurred';
-      const errorData = await response.json();
-      errorMessage = errorData.message || response.statusText || errorMessage;
       return { 
-        error: errorMessage, 
-        data: null, 
+        success: false,
+        error: data.message || response.statusText || 'An error occurred',
         status: response.status 
       };
     }
 
-    const data = await response.json() as T;
-    console.log(data)
-    return { data, error: null, status: response.status };
+    return { 
+      success: true,
+      ...data as T, // spreads server response directly
+      status: response.status 
+    };
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Network error occurred';
-    return { error: errorMessage, data: null };
+    return { 
+      success: false,
+      error: errorMessage 
+    };
   }
 }
