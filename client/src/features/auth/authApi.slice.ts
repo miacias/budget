@@ -9,15 +9,28 @@ interface LoginRequest {
 }
 
 interface LoginResponse {
-  user: User
-  token: string
+  success: boolean
+  data?: {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+    token: string
+  }
+  error?: string
   message?: string
+  status?: number
 }
 
 interface AuthValidationResponse {
-  valid: boolean
-  user?: User
-  message?: string
+  success: boolean;
+  data?: {
+    id: string;
+    email: string;
+  }
+  error?: string;
+  message?: string;
+  status?: number;
 }
 
 export const authApiSlice = createApi({
@@ -43,8 +56,14 @@ export const authApiSlice = createApi({
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled
-          dispatch(loginSuccess({ user: data.user, token: data.token }))
+          const { data: response } = await queryFulfilled
+          const user: User = {
+            id: response.data.id,
+            email: response.data.email,
+            firstName: response.data.firstName,
+            lastName: response.data.lastName,
+          }
+          dispatch(loginSuccess({ user, token: response.data.token }))
         } catch (error) {
           dispatch(loginFailure('Login failed. Please check your credentials.'))
         }
@@ -56,11 +75,11 @@ export const authApiSlice = createApi({
         method: 'POST',
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        dispatch(logout())
         try {
           await queryFulfilled
+          dispatch(logout())
         } catch {
-          // Even if the API call fails, we still want to log out locally
+          dispatch(logout()) // logs out locally even if API call fails
         }
       },
     }),
@@ -68,8 +87,8 @@ export const authApiSlice = createApi({
       query: () => '/api/auth/validate',
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled
-          if (!data.valid) {
+          const { data: response } = await queryFulfilled
+          if (!response.success) {
             dispatch(logout())
           }
         } catch {

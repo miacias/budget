@@ -27,23 +27,6 @@ export const Layout = ({ title, children }: PropsWithChildren<LayoutProps>) => {
     navigate("/login");
   };
 
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const handleSignOut = async () => {
-  //   const response = await fetchUtil({
-  //     url: "/api/auth/logout",
-  //     method: "POST",
-  //   });
-  //   if (response.success) {
-  //     localStorage.removeItem("authToken");
-  //     localStorage.removeItem("user");
-  //     setIsAuthenticated(false);
-  //     window.location.href = "/";
-  //   }
-  // };
-  // const handleRouteToLogin = () => {
-  //   window.location.href = "/login";
-  // };
-
   return (
     <Container maxW="container.lg">
       <Flex mb={4} justify={"space-between"}>

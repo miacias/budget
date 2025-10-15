@@ -1,25 +1,16 @@
+// thid party
 import { useState } from "react";
 import { Button, Card, Field, Fieldset, Input } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+// redux
+import { useLoginMutation } from "@/features/auth";
+// components
 import { Section } from "../../components";
 import { CreateAccountForm } from "./CreateAccountForm";
-import { fetchUtil, httpMethods } from "../../utils";
 
 interface LoginData {
   email: string;
   password: string;
-}
-
-interface LoginResponse {
-  success: boolean;
-  message: string;
-  data?: {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    token: string;
-  };
-  error?: string;
 }
 
 export const Login = () => {
@@ -28,6 +19,8 @@ export const Login = () => {
     password: "",
   });
   const [isNewUser, setIsNewUser] = useState(false);
+  const navigate = useNavigate();
+  const [login, { isLoading, error }] = useLoginMutation();
 
   const handleNewUserClick = () => {
     setIsNewUser(!isNewUser);
@@ -46,20 +39,11 @@ export const Login = () => {
     if (!formData.email || !formData.password) {
       return alert("Please fill in all fields");
     }
-
-    const response = await fetchUtil<LoginResponse>({
-      url: "/api/auth/login",
-      method: httpMethods.POST,
-      body: formData,
-      options: { retries: 3, retryDelay: 1000, requireAuth: false },
-    });
-
-    if (response.success && response.data?.token) {
-      localStorage.setItem("authToken", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data));
-      window.location.href = "/";
-    } else {
-      console.error("Login failed:", response.error);
+    try {
+      await login(formData).unwrap();
+      navigate("/");
+    } catch (err) {
+      console.error("Login failed:", err);
     }
   };
 
