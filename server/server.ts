@@ -12,14 +12,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 
-db.once("open", () => {
-  app.listen(PORT, () =>
-    logger.server.start(PORT)
-  );
-});
+// For local development only
+if (!process.env.VERCEL) {
+  db.once("open", () => {
+    app.listen(PORT, () =>
+      logger.server.start(PORT)
+    );
+  });
 
-db.on("error", (err) => {
-  logger.server.error(`DB Connection Error: ${err.message}`);
-});
+  db.on("error", (err) => {
+    logger.server.error(`DB Connection Error: ${err.message}`);
+  });
+}
 
-export { app };
+export default app; // Vercel
+export { app }; // development and testing

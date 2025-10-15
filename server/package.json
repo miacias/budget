@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --env-file=.env --exec \"tsx\" server.ts",
+    "build": "echo 'Server build complete'",
+    "start": "tsx server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
