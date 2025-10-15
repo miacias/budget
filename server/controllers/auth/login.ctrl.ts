@@ -2,13 +2,11 @@ import { User } from '../../models';
 import { logger } from '../../utils/chalk';
 import { signToken } from '../../utils/auth';
 import { Request, Response } from 'express';
+import { endpoints } from '../../config/endpoint.config';
 
 export const loginUser = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
   logger.debug('Logging in user...');
-  const endpoint = {
-    route: '/api/auth/login',
-    method: 'POST',
-  }
+  const endpoint = endpoints.auth.login;
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -49,12 +47,12 @@ export const loginUser = async (req: Request, res: Response): Promise<Response<a
     return res.status(200).json({
       success: true,
       message: 'User logged in successfully',
-      token,
       data: {
         id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        token,
       },
     });
   } catch (err: any) {

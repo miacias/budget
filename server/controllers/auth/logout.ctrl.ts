@@ -1,31 +1,17 @@
 import { User } from '../../models';
 import { logger } from '../../utils/chalk';
-import { getTokenFromHeader } from '../../utils/auth';
 import { Request, Response } from 'express';
+import { endpoints } from '../../config/endpoint.config';
 
 export const logoutUser = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
   logger.debug('Logging out user...');
-  const endpoint = {
-    route: '/api/auth/logout',
-    method: 'POST',
-  }
+  const endpoint = endpoints.auth.logout;
   try {
     const user = req.user as any;
     if (!user) {
       logger.info('No user in request');
       logger.server.request(endpoint.method, endpoint.route, 401);
       return res.status(401).json({ 
-        success: false,
-        message: 'No token provided',
-      });
-    }
-
-    const token = getTokenFromHeader(req);
-    
-    if (!token) {
-      logger.info('No token provided');
-      logger.server.request(endpoint.method, endpoint.route, 401);
-      return res.status(401).json({
         success: false,
         message: 'No token provided',
       });

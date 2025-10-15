@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { api } from '../../../controllers';
 import { authMiddleware } from '../../../utils/auth';
-import { incomeRouter } from './income';
+import { incomeRouter } from './income/income.route';
 
 const router: Router = Router({ mergeParams: true });
 
