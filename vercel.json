@@ -19,11 +19,18 @@
       "dest": "/server/server.ts"
     },
     {
-      "src": "/(.*)",
+      "src": "/assets/(.*)",
+      "dest": "/client/dist/assets/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
       "dest": "/client/dist/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/client/dist/index.html"
     }
   ],
   "installCommand": "npm install --prefix client && npm install --prefix server",
-  "buildCommand": "cd client && npm run build",
-  "outputDirectory": "client/dist"
+  "buildCommand": "cd client && npm run build"
 }
