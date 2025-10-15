@@ -20,7 +20,7 @@ export const Login = () => {
   });
   const [isNewUser, setIsNewUser] = useState(false);
   const navigate = useNavigate();
-  const [login, { isLoading, error }] = useLoginMutation();
+  const [login] = useLoginMutation();
 
   const handleNewUserClick = () => {
     setIsNewUser(!isNewUser);

@@ -54,17 +54,19 @@ export const authApiSlice = createApi({
         method: 'POST',
         body: credentials,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data: response } = await queryFulfilled
-          const user: User = {
-            id: response.data.id,
-            email: response.data.email,
-            firstName: response.data.firstName,
-            lastName: response.data.lastName,
+          if (response.data) {
+            const user: User = {
+              id: response.data.id,
+              email: response.data.email,
+              firstName: response.data.firstName,
+              lastName: response.data.lastName,
+            }
+            dispatch(loginSuccess({ user, token: response.data.token }))
           }
-          dispatch(loginSuccess({ user, token: response.data.token }))
-        } catch (error) {
+        } catch {
           dispatch(loginFailure('Login failed. Please check your credentials.'))
         }
       },
@@ -74,7 +76,7 @@ export const authApiSlice = createApi({
         url: '/api/auth/logout',
         method: 'POST',
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled
           dispatch(logout())
@@ -85,7 +87,7 @@ export const authApiSlice = createApi({
     }),
     validateToken: builder.query<AuthValidationResponse, void>({
       query: () => '/api/auth/validate',
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data: response } = await queryFulfilled
           if (!response.success) {
