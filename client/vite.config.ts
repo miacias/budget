@@ -16,7 +16,14 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          // Split vendor libraries into separate chunks
+          'react-vendor': ['react', 'react-dom'],
+          'router-vendor': ['react-router-dom'],
+          'ui-vendor': ['@chakra-ui/react', '@emotion/react'],
+          'redux-vendor': ['@reduxjs/toolkit', 'react-redux'],
+          'icons-vendor': ['react-icons']
+        },
       },
     },
   },
